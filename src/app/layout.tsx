@@ -24,7 +24,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} bg-black text-white flex flex-col items-center`}
+      >
+        <header>
+          <h1 className="text-red-700 font-bold">ONEBITE CINEMA</h1>
+        </header>
         {children}
       </body>
     </html>
