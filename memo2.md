@@ -15,6 +15,7 @@ const response = await fetch(`~api`, { cache: "force-cache" });
 - force-cache : 요청의 결과를 무조건 캐싱함 , 한번 호출 된 이후에는 다시는 호출 되지 않음, ** 캐시가 없으면 서버에 요청을 보냄 **
 - no-store : 데이터 페칭의 결과를 저장하지 않는 옵션(저장을 안함), 캐싱을 아예 하지 않도록 설정하는 옵션임, ** 14버전이후 no-store 옵션이 기본값이 됨 **
 - next : {revalidate: 3} : 특정 시간을 (숫자second)주기로 캐시를 업데이트 함 , 마치 Page Router 의 ISR 방식과 유사 함 // STALE(이전 데이터) 사용 이후 서버에 요청을 보냄
+- next : tags : ['a'] : On-Demand Revalidate , 요청이 들어왔을 때 데이터를 최신화 함
 
 ### 캐싱된 데이터
 
