@@ -5,7 +5,7 @@ import { MovieData } from "@/types";
 async function AllMovies() {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_SERVER_URL}/movie/`,
-    { cache: "no-store" }
+    { cache: "force-cache" } // 전체 영화 목록은 크게 변화가 없을것이라 예상하여 캐시된 데이터를 사용합니다.
   );
   if (!response.ok) {
     return <div>오류가 발생했습니다 ...</div>;
@@ -23,7 +23,7 @@ async function AllMovies() {
 async function RecommendMovies() {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_SERVER_URL}/movie/random`,
-    { next: { revalidate: 3 } }
+    { next: { revalidate: 3 } } // 사용자에게 매번 다른 데이터를 보여주는게 좋지만 실시간 변화까지는 요구 되지 않을것이라 예상하여 3초마다 데이터를 최신화 합니다.
   );
   if (!response.ok) {
     return <div>오류가 발생했습니다 ...</div>;
