@@ -12,10 +12,15 @@ const response = await fetch(`~api`, { cache: "force-cache" });
 
 ## 캐시 정책
 
-- force-cache : 요청의 결과를 무조건 캐싱함 , 한번 호출 된 이후에는 다시는 호출 되지 않음
-- no-store : 데이터 페칭의 결과를 저장하지 않는 옵션(저장을 안함), 캐싱을 아예 하지 않도록 설정하는 옵션임, **14버전이후 no-store 옵션이 기본값이 됨**
-- no-cache : 캐시 데이터 사용 안함
-- only-if-cached : 캐시 데이터 사용 안함
+- force-cache : 요청의 결과를 무조건 캐싱함 , 한번 호출 된 이후에는 다시는 호출 되지 않음, ** 캐시가 없으면 서버에 요청을 보냄 **
+- no-store : 데이터 페칭의 결과를 저장하지 않는 옵션(저장을 안함), 캐싱을 아예 하지 않도록 설정하는 옵션임, ** 14버전이후 no-store 옵션이 기본값이 됨 **
+- next : {revalidate: 3} : 특정 시간을 (숫자second)주기로 캐시를 업데이트 함 , 마치 Page Router 의 ISR 방식과 유사 함 // STALE(이전 데이터) 사용 이후 서버에 요청을 보냄
+
+### 캐싱된 데이터
+
+캐싱된 데이터는 json형태로 next서버안에 보관됩니다.
+
+.next/cache/ 폴더에 저장됨
 
 ### 캐시 정책 주의사항
 
@@ -45,6 +50,8 @@ export default nextConfig;
 서버콘솔에서 출력
 
 ```bash
-GET https://onebite-cinema-api-main-ecru.vercel.app/movie/random 200 in 3884ms (cache skip)
+GET https://api.com/movie/random 200 in 3884ms (cache skip) // no-store 옵션 사용시
 Cache skipped reason: (auto no cache)
+
+GET https://api.com/movie/random 200 in 8ms (cache hit) // force-cache 옵션 사용시
 ```
