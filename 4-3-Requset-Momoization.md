@@ -1,6 +1,5 @@
 # Request-Momoization
 
-vb ffffffgxc
 데이터 패칭을 최적화시 사용되는 기능입니다. (요청을 기억 합니다)
 
 ## 동작 방식
