@@ -3,10 +3,10 @@ import style from "./page.module.css";
 import { MovieData } from "@/types";
 import { delay } from "@/util/delay";
 import { Suspense } from "react";
-import MovieItemSkeleton from "@/components/skeleton/movie-item-skeleton";
+import MovieListSkeleton from "@/components/skeleton/movie-list-skeleton";
 
 async function AllMovies() {
-  await delay(5000);
+  await delay(3000);
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_SERVER_URL}/movie/`,
     { cache: "force-cache" } // 전체 영화 목록은 크게 변화가 없을것이라 예상하여 캐시된 데이터를 사용합니다.
@@ -25,7 +25,7 @@ async function AllMovies() {
 }
 
 async function RecommendMovies() {
-  await delay(3000);
+  await delay(1000);
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_SERVER_URL}/movie/random`,
     { next: { revalidate: 3 } } // 사용자에게 매번 다른 데이터를 보여주는게 좋지만 실시간 변화까지는 요구 되지 않을것이라 예상하여 3초마다 데이터를 최신화 합니다.
@@ -50,21 +50,13 @@ export default function Home() {
     <div className={style.conatiner}>
       <section>
         <h3>지금 가장 추천하는 영화</h3>
-        <Suspense
-          fallback={
-            <div>
-              <MovieItemSkeleton />
-              <MovieItemSkeleton />
-              <MovieItemSkeleton />
-            </div>
-          }
-        >
+        <Suspense fallback={<MovieListSkeleton count={3} gridColumns={3} />}>
           <RecommendMovies />
         </Suspense>
       </section>
       <section>
         <h3>등록된 모든 영화</h3>
-        <Suspense fallback={<div>전체 영화를 불러오는 중입니다.</div>}>
+        <Suspense fallback={<MovieListSkeleton count={5} gridColumns={5} />}>
           <AllMovies />
         </Suspense>
       </section>
