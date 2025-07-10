@@ -3,6 +3,7 @@ import { delay } from "@/util/delay";
 import { MovieData } from "@/types";
 import style from "./page.module.css";
 import { Suspense } from "react";
+import MovieListSkeleton from "@/components/skeleton/movie-list-skeleton";
 
 async function SearchResult({ q }: { q: string }) {
   await delay(1500);
@@ -32,7 +33,10 @@ export default function SearchBar({
   }>;
 }) {
   return (
-    <Suspense key={searchParams.q} fallback={<div>Loading...</div>}>
+    <Suspense
+      key={searchParams.q}
+      fallback={<MovieListSkeleton count={3} gridColumns={3} />}
+    >
       <SearchResult q={searchParams.q || ""} />
     </Suspense>
   );
