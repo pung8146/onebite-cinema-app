@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import style from "./page.module.css";
-import { MovieData } from "@/types";
+import { MovieData, ReviewData } from "@/types";
+import ReviewItem from "@/components/review-item";
+import ReviewEditor from "@/components/review-editor";
 
 export const dynamicParams = false;
 
@@ -67,20 +69,27 @@ export async function generateStaticParams() {
   }));
 }
 
-function ReviewEditor() {
-  async function createReviewAction(formData: FormData) {
-    "use server";
-    const content = formData.get("content")?.toString();
-    const author = formData.get("author")?.toString();
-    console.log(content, author);
+async function ReviewList({ movieId }: { movieId: string }) {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_SERVER_URL}/review?movieId=${movieId}`,
+    {
+      next: {
+        tags: [`review-${movieId}`],
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(`Review fetch failed : ${response.statusText}`);
   }
+
+  const reviews: ReviewData[] = await response.json();
+
   return (
     <section>
-      <form action={createReviewAction}>
-        <input name="content" placeholder="리뷰 내용" />
-        <input name="author" placeholder="작성자" />
-        <button type="submit">작성하기</button>
-      </form>
+      {reviews.map((review) => (
+        <ReviewItem key={`review-item-${review.id}`} {...review} />
+      ))}
     </section>
   );
 }
@@ -89,7 +98,8 @@ export default async function Page({ params }: { params: { id: string } }) {
   return (
     <div className={style.container}>
       <MovieDetail movieId={params.id} />
-      <ReviewEditor />
+      <ReviewEditor movieId={params.id} />
+      <ReviewList movieId={params.id} />
     </div>
   );
 }
