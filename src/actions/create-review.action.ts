@@ -2,13 +2,16 @@
 
 import { revalidateTag } from "next/cache";
 
-export async function createReviewAction(formData: FormData) {
+export async function createReviewAction(_: any, formData: FormData) {
   const movieId = formData.get("movieId")?.toString();
   const content = formData.get("content")?.toString();
   const author = formData.get("author")?.toString();
 
   if (!content || !author || !movieId) {
-    return;
+    return {
+      status: false,
+      error: "리뷰 내용과 작성자를 입력해주세요",
+    };
   }
   try {
     const res = await fetch(
@@ -18,10 +21,18 @@ export async function createReviewAction(formData: FormData) {
         body: JSON.stringify({ movieId, content, author }),
       }
     );
-    console.log("ReviewEditor res", res.status);
+    if (!res.ok) {
+      throw new Error(res.statusText);
+    }
     revalidateTag(`review-${movieId}`);
+    return {
+      status: true,
+      error: "",
+    };
   } catch (error) {
-    console.error(error);
-    return;
+    return {
+      status: false,
+      error: `리뷰 작성에 실패했습니다. ${error}`,
+    };
   }
 }
